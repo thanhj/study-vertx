@@ -1,0 +1,40 @@
+docker run -i -t vertx/vertx3-exec
+
+docker run -it --entrypoint bash openjdk:11-jdk
+
+CAP and FLP theorems
+
+mvn io.fabric8:vertx-maven-plugin:1.0.5:setup -DprojectGroupId=io.vertx.sample -DprojectArtifactId=my-first-vertx-app -Dverticle=io.vertx.sample.MyFirstVerticle
+
+mvn io.fabric8:vertx-maven-plugin:1.0.5:setup \
+	-DprojectGroupId=io.vertx.microservice \
+	-DprojectArtifactId=hello-microservice-http \
+	-Dverticle=io.vertx.book.http.HelloMicroservice \
+	-Ddependencies=web
+
+mvn compile vertx:run
+
+mvn io.fabric8:vertx-maven-plugin:1.0.5:setup \
+	-DprojectGroupId=io.vertx.microservice \
+	-DprojectArtifactId=hello-consumer-microservice-http \
+	-Dverticle=io.vertx.book.http.HelloConsumerMicroservice \
+	-Ddependencies=web,web-client,rx
+
+
+mvn io.fabric8:vertx-maven-plugin:1.0.5:setup \
+	-DprojectGroupId=io.vertx.microservice \
+	-DprojectArtifactId=hello-microservice-message \
+	-Dverticle=io.vertx.book.message.HelloMicroservice \
+	-Ddependencies=infinispan
+
+mvn compile vertx:run \
+	-Dvertx.runArgs="-cluster -Djava.net.preferIPv4Stack=true"
+
+
+mvn io.fabric8:vertx-maven-plugin:1.0.5:setup \
+    -DprojectGroupId=io.vertx.microservice \
+    -DprojectArtifactId=hello-consumer-microservice-message \
+    -Dverticle=io.vertx.book.message.HelloConsumerMicroservice \
+    -Ddependencies=infinispan,rx	
+
+mvn compile vertx:run -Dvertx.runArgs="-cluster -Djava.net.preferIPv4Stack=true"
