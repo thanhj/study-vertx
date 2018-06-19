@@ -3,9 +3,12 @@ package io.vertx.book.message;
 
 import io.vertx.core.json.JsonObject;
 import io.vertx.rxjava.core.AbstractVerticle;
+import io.vertx.rxjava.core.RxHelper;
 import io.vertx.rxjava.core.eventbus.EventBus;
 import io.vertx.rxjava.core.eventbus.Message;
 import rx.Single;
+
+import java.util.concurrent.TimeUnit;
 
 public class HelloConsumerMicroservice extends AbstractVerticle {
 
@@ -17,9 +20,15 @@ public class HelloConsumerMicroservice extends AbstractVerticle {
                             EventBus bus = vertx.eventBus();
                             Single<JsonObject> obs1 = bus
                                     .<JsonObject>rxSend("hello", "Luke")
+                                    .subscribeOn(RxHelper.scheduler(vertx))
+                                    .timeout(3, TimeUnit.SECONDS)
+                                    .retry()
                                     .map(Message::body);
                             Single<JsonObject> obs2 = bus
                                     .<JsonObject>rxSend("hello", "Leia")
+                                    .subscribeOn(RxHelper.scheduler(vertx))
+                                    .timeout(3, TimeUnit.SECONDS)
+                                    .retry()
                                     .map(Message::body);
 
                             Single
